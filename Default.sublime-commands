@@ -1,0 +1,6 @@
+[
+  {
+    "caption": "VSCode: Open in Visual Studio Code",
+    "command": "vsc_open_in_visal_studio_code"
+  },
+]
