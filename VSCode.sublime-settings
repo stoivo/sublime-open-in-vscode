@@ -1,0 +1,6 @@
+{
+    /*
+        Path to Visual Studio Code executable
+     */
+    "vscode-path": "/usr/local/bin/code"
+}

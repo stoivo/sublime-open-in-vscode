@@ -1,0 +1,3 @@
+[
+  { "keys": ["control+super+v", "control+super+s"], "command": "vsc_open_in_visal_studio_code" },
+]

@@ -3,4 +3,12 @@
     "caption": "VSCode: Open in Visual Studio Code",
     "command": "vsc_open_in_visal_studio_code"
   },
+  {
+      "caption": "Preferences: VSCode Settings",
+      "command": "edit_settings",
+      "args": {
+          "base_file": "${packages}/visual-studio-code/VSCode.sublime-settings",
+          "default": "// Settings in here override those in \"visual-studio-code/VSCode.sublime-settings\",\n\n{\n    $0\n}\n"
+      }
+  },
 ]
