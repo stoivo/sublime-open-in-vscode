@@ -23,7 +23,7 @@ class VscOpenInVisalStudioCodeCommand(WindowCommand):
         cmd = [
             settings.get('vscode-path'),
             '--new-window' if first_time else '',
-            '{}'.format(" ".join('--add ' + folder for folder in folders)) if folders else '',
+            '{}'.format(" ".join('--add ' + "'{}'".format(folder) for folder in folders)) if folders else '',
             '--reuse-window',
             '--goto "{}:{}:{}"'.format(path, (row) + 1, col + 1) if path else None
         ]

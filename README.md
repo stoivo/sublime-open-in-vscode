@@ -10,6 +10,6 @@ demo:
 There are a default key binding and a command pallet command.
 ```json
 [
-  { "keys": ["control+super+v", "control+super+s"], "command": "vsc_open_in_visal_studio_code" },
+  { "keys": ["ctrl+super+v", "ctrl+super+s"], "command": "vsc_open_in_visal_studio_code" },
 ]
 ```
