@@ -1,6 +1,6 @@
 import sublime
 from sublime_plugin import WindowCommand
-import os
+import subprocess
 
 # code --new-window --add ~/dev/work/repo/
 # code --reuse-window --goto ~/dev/work/repo/src/views/Departments.vue
@@ -33,10 +33,11 @@ class VscOpenInVisalStudioCodeCommand(WindowCommand):
         sel = view.sel()
 
         if path:
-            if False and sel:
+            cmd.append('--goto')
+            if sel:
                 (row, col) = view.rowcol(sel[0].a)
-                cmd.append('--goto "{}":{}:{}'.format(path, (row) + 1, col + 1))
+                cmd.append('{}:{}:{}'.format(path, (row) + 1, col + 1))
             else:
-                cmd.append('--goto "{}"'.format(path))
+                cmd.append('{}'.format(path))
 
-        os.system(" ".join(cmd))
+        subprocess.Popen(cmd)
