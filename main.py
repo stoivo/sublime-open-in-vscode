@@ -31,7 +31,19 @@ def open_in_vs_code(path, folders):
         cmd.append('--goto')
         cmd.append('{}'.format(path))
 
-    subprocess.Popen(cmd)
+    startupinfo = None
+    if os.name == "nt":
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+    subprocess.Popen(
+        args=" ".join(cmd),
+        startupinfo=startupinfo,
+        shell=True,
+        stdin=subprocess.PIPE,   # python 3.3 bug on Win7
+        stderr=subprocess.PIPE,
+        stdout=subprocess.PIPE
+    )
 
 
 class VscOpenInVisalStudioCodeCommand(WindowCommand):
