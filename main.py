@@ -1,6 +1,7 @@
 import sublime
 from sublime_plugin import WindowCommand
 import subprocess
+import os
 
 # code --new-window --add ~/dev/work/repo/
 # code --reuse-window --goto ~/dev/work/repo/src/views/Departments.vue
@@ -40,4 +41,16 @@ class VscOpenInVisalStudioCodeCommand(WindowCommand):
             else:
                 cmd.append('{}'.format(path))
 
-        subprocess.Popen(cmd)
+        startupinfo = None
+        if os.name == "nt":
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+        subprocess.Popen(
+            args=cmd,
+            startupinfo=startupinfo,
+            shell=True,
+            stdin=subprocess.PIPE,   # python 3.3 bug on Win7
+            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE
+        )
