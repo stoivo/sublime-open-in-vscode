@@ -6,6 +6,7 @@ import os
 from functools import partial
 
 from itertools import chain
+
 flatten = chain.from_iterable
 
 # code --new-window --add ~/dev/work/repo/
@@ -13,37 +14,42 @@ flatten = chain.from_iterable
 
 first_time = False
 
+
 def open_in_vs_code(path, folders):
     global first_time
 
     settings = sublime.load_settings("VSCode.sublime-settings")
-    cmd = [settings.get('vscode-path')]
+    # cmd = [settings.get('vscode-path')]
 
-    if first_time:
-        cmd.append('--new-window')
+    # if first_time:
+    #     cmd.append('--new-window')
 
-    for folder in folders:
-        cmd.append("--add \"{}\"".format(folder))
+    # for folder in folders:
+    #     cmd.append("--add \"{}\"".format(folder))
 
-    cmd.append('--reuse-window')
+    # cmd.append('--reuse-window')
 
     if path:
-        cmd.append('--goto')
-        cmd.append('{}'.format(path))
+        subprocess.call(["open", "-g", "-a", "Cursor", "cursor://file{}".format(path)])
+        subprocess.call(["osascript", "-e", 'tell application "Cursor" to activate'])
 
-    startupinfo = None
-    if os.name == "nt":
-        startupinfo = subprocess.STARTUPINFO()
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        # os.system('open "" cursor://file{}'.format(path))
+    # cmd.append('--goto')
+    # cmd.append('{}'.format(path))
 
-    subprocess.Popen(
-        args=" ".join(cmd),
-        startupinfo=startupinfo,
-        shell=True,
-        stdin=subprocess.PIPE,   # python 3.3 bug on Win7
-        stderr=subprocess.PIPE,
-        stdout=subprocess.PIPE
-    )
+    # startupinfo = None
+    # if os.name == "nt":
+    #     startupinfo = subprocess.STARTUPINFO()
+    #     startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+    # subprocess.Popen(
+    #     args=" ".join(cmd),
+    #     startupinfo=startupinfo,
+    #     shell=True,
+    #     stdin=subprocess.PIPE,   # python 3.3 bug on Win7
+    #     stderr=subprocess.PIPE,
+    #     stdout=subprocess.PIPE
+    # )
 
 
 class VscOpenInVisalStudioCodeCommand(WindowCommand):
@@ -58,7 +64,7 @@ class VscOpenInVisalStudioCodeCommand(WindowCommand):
             sel = view.sel()
             if sel:
                 (row, col) = view.rowcol(sel[0].a)
-                open_in_vs_code('{}:{}:{}'.format(path, (row) + 1, col + 1), folders)
+                open_in_vs_code("{}:{}:{}".format(path, (row) + 1, col + 1), folders)
             else:
                 open_in_vs_code(path, folders)
         else:
@@ -69,7 +75,9 @@ def get_subjects(view, *sections):
     # type: (sublime.View, str) -> Iterable[sublime.Region]
     return flatten(
         view.find_by_selector(
-            'meta.git-savvy.status.section.{} meta.git-savvy.status.subject'.format(section)
+            "meta.git-savvy.status.section.{} meta.git-savvy.status.subject".format(
+                section
+            )
         )
         for section in sections
     )
@@ -110,7 +118,7 @@ def get_selected_subjects(view, *sections):
 def get_selected_files(view, base_path, *sections):
     # type: (sublime.View, str, str) -> List[str]
     if not sections:
-        sections = ('staged', 'unstaged', 'untracked', 'merge-conflicts')
+        sections = ("staged", "unstaged", "untracked", "merge-conflicts")
 
     make_abs_path = partial(os.path.join, base_path)
 
@@ -124,7 +132,7 @@ class VscOpenInVisalStudioCodeGitSavvyStatusCommand(WindowCommand):
     def repo_path(self):
         view = self.window.active_view()
         settings = view.settings()
-        return settings.get('git_savvy.repo_path')
+        return settings.get("git_savvy.repo_path")
 
     def run(self):
         folders = self.window.folders() or []
